@@ -291,8 +291,8 @@ with st.container():
         st.markdown(
             """
             <div class="hero">
-              <div class="brand">Ad’s up — GA4 Chat</div>
-              <div style="color:#e5e7eb; margin-top:4px;">Analyse GA4 avec Gemini + MCP, contexte mémorisé</div>
+              <div class="brand">GA4 Copilot Ad's up Consulting</div>
+              <div style="color:#e5e7eb; margin-top:4px;">Plateforme copilote GA4 propulsée par Gemini : insights instantanés</div>
               <div class="chips" style="margin-top:8px;">
                 <span>Gemini 2.5</span><span>GA4 Tools</span><span>Mémoire multi-tours</span>
               </div>
@@ -343,7 +343,7 @@ tools = _load_tools()
 # ======================
 st.markdown('<div class="glass">', unsafe_allow_html=True)
 
-user_q = st.chat_input("Pose ta question (ex: « liste des property », « top sources 7 derniers jours »)…")
+user_q = st.chat_input("Pose ta question")
 if user_q:
     st.session_state.history.append(("user", user_q))
     with st.spinner("Gemini réfléchit…"):
@@ -360,35 +360,4 @@ for role, msg in st.session_state.history:
 
 st.markdown('</div>', unsafe_allow_html=True)
 
-# ======================
-# Résultats GA4 (si détectés) : KPIs + table + exports
-# ======================
-payload = st.session_state.last_tool_payload
-if payload and isinstance(payload, dict) and "response" in payload:
-    resp = payload["response"]
-
-    # KPIs si totaux
-    totals = ga4_totals(resp)
-    if totals:
-        st.subheader("📌 KPIs")
-        k_cols = st.columns(min(4, max(1, len(totals))))
-        for i, (k, v) in enumerate(totals.items()):
-            with k_cols[i % len(k_cols)]:
-                st.markdown('<div class="kpi-card">', unsafe_allow_html=True)
-                st.markdown(f'<div class="kpi-title">{k}</div>', unsafe_allow_html=True)
-                st.markdown(f'<div class="kpi-value">{v}</div>', unsafe_allow_html=True)
-                st.markdown('</div>', unsafe_allow_html=True)
-
-    # Tableau + exports
-    df = ga4_rows_to_df(resp)
-    st.subheader("📈 Résultats")
-    if df is not None and not df.empty:
-        st.dataframe(df, use_container_width=True, hide_index=True)
-        csv = df.to_csv(index=False).encode("utf-8")
-        json_bytes = io.BytesIO(json.dumps(resp, ensure_ascii=False, indent=2).encode("utf-8"))
-        c1, c2 = st.columns(2)
-        c1.download_button("⬇️ Export CSV", data=csv, file_name="ga4_report.csv", mime="text/csv")
-        c2.download_button("⬇️ Export JSON", data=json_bytes, file_name="ga4_raw.json", mime="application/json")
-    else:
-        with st.expander("Voir la réponse brute (JSON)"):
-            st.json(resp)
+# (Section "Résultats GA4 (KPIs, tableau, exports)" supprimée comme demandé)
