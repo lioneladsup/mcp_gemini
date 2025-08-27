@@ -291,7 +291,7 @@ with st.container():
         st.markdown(
     """
     <div class="hero">
-      <div class="brand">GA4 Copilot Ad's up Consulting</div>
+      <div class="brand">GA4 analyzer - Ad's up Consulting</div>
       <div style="color:#e5e7eb; margin-top:4px; font-weight:700;">
         Plateforme copilote GA4 propulsée par Gemini : insights instantanés
       </div>
