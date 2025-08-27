@@ -289,15 +289,17 @@ with st.container():
     c1, c2 = st.columns([0.75, 0.25])
     with c1:
         st.markdown(
-            """
-            <div class="hero">
-              <div class="brand">GA4 Copilot Ad's up Consulting</div>
-              <div style="color:#e5e7eb; margin-top:4px;">Plateforme copilote GA4 propulsée par Gemini : insights instantanés</div>
-              <div class="chips" style="margin-top:8px;">
-                <span>Gemini 2.5</span><span>GA4 Tools</span><span>Mémoire multi-tours</span>
-              </div>
-            </div>
-            """,
+    """
+    <div class="hero">
+      <div class="brand">GA4 Copilot Ad's up Consulting</div>
+      <div style="color:#e5e7eb; margin-top:4px; font-weight:700;">
+        Plateforme copilote GA4 propulsée par Gemini : insights instantanés
+      </div>
+      <div class="chips" style="margin-top:8px;">
+        <span>Gemini 2.5</span><span>GA4 Tools</span><span>Mémoire multi-tours</span>
+      </div>
+    </div>
+    """,
             unsafe_allow_html=True
         )
     with c2:
