@@ -1,9 +1,10 @@
-# app.py — Ad's up · GA4 Chat (UI épurée, sans sidebar) — Cloud-ready
+# app.py — Ad's up · GA4 Chat (UI épurée, sans sidebar) — Cloud-ready + fix lancement MCP
 import os
 import sys
 import io
 import json
 import asyncio
+import shutil
 from typing import Any, Dict, List, Optional
 
 import streamlit as st
@@ -177,16 +178,36 @@ def ga4_totals(report: Dict[str, Any]) -> Dict[str, Any]:
 
 
 # ======================
-# 🚀 MCP côté Cloud : lancer le module (pas pipx)
+# 🚀 MCP côté Cloud : préférer le binaire, fallback vers python -m
 # ======================
-SERVER_PARAMS = StdioServerParameters(
-    command=sys.executable,          # même Python que l'app
-    args=["-m", "analytics_mcp"],    # nécessite analytics-mcp dans requirements.txt
-    env={
-        "GOOGLE_APPLICATION_CREDENTIALS": os.environ["GOOGLE_APPLICATION_CREDENTIALS"],
-        "GOOGLE_PROJECT_ID": GOOGLE_PROJECT_ID,
-    },
-)
+def _build_server_params() -> StdioServerParameters:
+    # 1) Essayer le binaire "analytics-mcp" (console script installé via requirements)
+    if shutil.which("analytics-mcp"):
+        return StdioServerParameters(
+            command="analytics-mcp",
+            args=[],
+            env={
+                "GOOGLE_APPLICATION_CREDENTIALS": os.environ["GOOGLE_APPLICATION_CREDENTIALS"],
+                "GOOGLE_PROJECT_ID": os.environ.get("GOOGLE_PROJECT_ID", ""),
+            },
+        )
+    # 2) Fallback : tenter "python -m analytics_mcp"
+    return StdioServerParameters(
+        command=sys.executable,
+        args=["-m", "analytics_mcp"],
+        env={
+            "GOOGLE_APPLICATION_CREDENTIALS": os.environ["GOOGLE_APPLICATION_CREDENTIALS"],
+            "GOOGLE_PROJECT_ID": os.environ.get("GOOGLE_PROJECT_ID", ""),
+        },
+    )
+
+SERVER_PARAMS = _build_server_params()
+
+def _assert_mcp_available():
+    if not shutil.which("analytics-mcp"):
+        st.info("ℹ️ Lancement via `python -m analytics_mcp` (binaire `analytics-mcp` introuvable dans PATH).")
+
+_assert_mcp_available()
 
 
 # ======================
